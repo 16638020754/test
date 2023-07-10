@@ -1,0 +1,174 @@
+/*试题区*/
+
+section dl, section dd {
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+	float: left;
+}
+
+section dd {
+	width: 100vw;
+	overflow-y: auto;
+	line-height: 150%;
+}
+
+section dd info {
+	display: block;
+	padding: 15px 15px 0px 15px;
+	height: 20px;
+	margin: 0px 10px;
+	font-size: 15px;
+}
+
+section dd info span {
+	font-size: 14px;
+	color: #999;
+}
+
+section dd p, dd span, dd font {
+	line-height: 150% !important;
+	font-size: 16px;
+}
+
+section dd card {
+	min-height: calc(100% - 30px - 40px);
+}
+
+section dd img {
+	max-width: 100% !important;
+	height: auto;
+}
+
+/*试题选项*/
+
+.ans_area {
+	margin-left: 5px;
+}
+
+.ans_area>div {
+	position: relative;
+	margin: 10px;
+}
+
+card[qid] .ans_area i {
+	font-style: normal;
+	margin-right: 10px;
+	white-space: nowrap;
+}
+
+.ans_area div[selected] {
+	color: #409EFF !important;
+}
+
+.ans_area>div[ansid] i {
+	font-style: normal;
+	margin-right: 15px !important;
+	display: inline-block;
+}
+
+.ans_area>div[ansid] i::before {
+	font-family: "webdesk_icon" !important;
+	font-style: normal;
+	font-size: 20px;
+	margin-right: 5px;
+}
+
+.type1>div[ansid] i::before {
+	content: '\e85c';
+}
+
+.type1>div[selected] i::before {
+	content: '\e85b';
+}
+
+.ans_area>div[ansid] {
+	display: flex;
+}
+
+.ans_area>div[ansid] * {
+	margin: 0px;
+	padding: 0px;
+}
+
+.ans_area>div[ansid] * {
+	line-height: auto !important;
+}
+
+
+.ans_area>div[correct]::before {
+	content: '\a048';
+}
+
+.type2>div i::before {
+	content: '\e603';
+}
+
+.type2>div[selected] i::before {
+	content: '\e78b';
+}
+
+/*判断题*/
+card[qid] .type3 {
+	display: flex;
+
+}
+
+card[qid] .type3>div:first-child {
+	margin-right: 40px;
+}
+
+card[qid] .type3 i {
+	font-size: 18px;
+}
+
+card[qid] .type3>div i::before {
+	font-family: "webdesk_icon" !important;
+	content: '\e603';
+	font-style: normal;
+	margin-right: 5px;
+	font-size: 22px;
+}
+
+card[qid] .type3>div[selected] i::before {
+	content: '\e78b';
+}
+
+.type4 button {
+	float: right;
+	height: 35px;
+	margin-bottom: 20px;
+	margin-right: 10px;
+}
+
+/*填空题*/
+.type5 input[type='text'] {	
+	font-size: 16px;
+	padding: 5px 10px;
+}
+/*简答题*/
+.type4 textarea{
+	width: calc(100% - 20px);
+	font-size: 16px;
+	padding: 5px 10px;
+}
+
+/*竖屏，手机端显示*/
+@media only screen and (orientation: portrait) {
+	section {
+		overflow: hidden;
+	}
+
+	section dd {
+		width: 100vw;
+		height: 100%;
+		overflow: auto;
+	}
+	table{
+		overflow: auto;
+		width: 100% !important;
+	}
+	td{
+		word-break: break-all;
+	}
+}

@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+
+<head resource>
+    <meta charset="utf-8">
+    <include file="../inc/meta.inc" />
+    <include file="inc/head.inc" />
+    <title>学员学习记录</title>
+</head>
+
+<body>
+    <div id="vapp" v-cloak>
+        <div class="toolsbar">
+            <btngroup show="导出,说明" ref='btngroup' path="Modify" @help="btnhelp" @output="exportVisible=true" width="880"
+                height="60%" idkey='Ac_ID' table="datatables">
+            </btngroup>
+            <query_panel :model="form" :loading="loading" @search="getdata(1)">
+                <el-form-item label="学员账号">
+                    <el-input v-model="form.acc" placeholder="账号" :disabled="loading" tabindex="0" clearable style="width:180px">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="姓名">
+                    <el-input v-model="form.name" :disabled="loading" placeholder="请输全名" tabindex="1" clearable
+                        style="width:100px">
+                    </el-input>
+                </el-form-item>
+            </query_panel>
+        </div>
+        <!--数据列表-->
+        <el-table ref="datatables" :data="datas" :stripe="true" tooltip-effect="dark" style="width: 100%"
+            v-loading="loading" row-key="Ac_ID" cell-class-name="tdcell">
+
+            <el-table-column type="index" label="#" width="60" align="center">
+                <template slot-scope="scope">
+                    <span>{{(form.index - 1) * form.size + scope.$index + 1}}</span>
+                </template>
+            </el-table-column>
+
+            <el-table-column label="姓名" width="100">
+                <template slot-scope="scope">
+                    <avatar :account="scope.row" circle="true" size="20"></avatar>
+
+                    <icon :woman="scope.row.Ac_Sex==2" class="acname" :man="scope.row.Ac_Sex!=2">
+                        <span v-html='showname(scope.row.Ac_Name)' v-if="scope.row.Ac_Name!=''"></span>
+                        <span v-else class="noname">(没有名字)</span>
+                    </icon>
+                </template>
+            </el-table-column>
+            <el-table-column label="账号">
+                <template slot-scope="scope">
+                    <icon :woman="scope.row.Ac_Sex==2" class="acc" :man="scope.row.Ac_Sex!=2"
+                        v-html='showacc(scope.row.Ac_AccName)'></icon>
+                </template>
+            </el-table-column>
+            <el-table-column label="电话">
+                <template slot-scope="scope" v-if="showTel(scope.row)!=''">
+                    <icon>&#xe677</icon>
+                    <span v-html='showTel(scope.row)'></span>
+                </template>
+            </el-table-column>
+            <el-table-column label="学员组">
+                <template slot-scope="scope">
+                    <div title="学员组">
+                        <el-tag type="info" v-if="scope.row.Sts_Name!=''">
+                            <span v-html='scope.row.Sts_Name'></span>
+                        </el-tag>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column label="学习情况" width="260">
+                <div slot-scope="scope" class="progress">
+                    <el-tooltip class="item" effect="light" content="视频学习进度" placement="bottom-start">
+                        <icon video>{{showcomplete(scope.row.Stc_StudyScore)}} %</icon>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="light" content="试题通过率" placement="bottom">
+                        <icon quesion>{{showcomplete(scope.row.Stc_QuesScore)}} %</icon>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="light" content="结课考试成绩" placement="bottom-end">
+                        <icon exam>{{scope.row.Stc_ExamScore}} 分</icon>
+                    </el-tooltip>
+                </div>
+            </el-table-column>
+            <el-table-column label="综合成绩" width="100" align="center">
+                <template slot-scope="scope">
+                    <result_score :account="scope.row" :config="config"></result_score>
+                </template>
+            </el-table-column>
+        </el-table>
+        <!--分页导航-->
+        <div id="pager-box">
+            <el-pagination v-on:current-change="getdata" :current-page="form.index" :page-sizes="[1]"
+                :page-size="form.size" :pager-count="15" layout="total, prev, pager, next, jumper" :total="total">
+            </el-pagination>
+        </div>
+        <!--记录导出-->
+        <el-dialog title="学员学习记录导出" :visible.sync="exportVisible" :show-close="false" :before-close="()=>{}">
+            <dl v-if="files.length>0">
+                <dd v-for="(f,i) in files">
+                    <div>{{i+1}}. <a :href="f.url" target="_blank" title="点击下载" :download="f.file">
+                            {{f.file}}</a>
+                        {{f.size|size}}
+                        <el-popconfirm title="确定删除这个文件吗？" @confirm="deleteFile(f.file)">
+                            <el-link type="danger" icon="el-icon-delete" v-loading="fileloading" slot="reference">删除
+                            </el-link>
+                        </el-popconfirm>
+                    </div>
+                </dd>
+            </dl>
+            <div v-else>
+                没有供下载的文件
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="exportVisible = false" :disabled="fileloading">取 消</el-button>
+                <el-button type="primary" @click="toexcel" :loading="fileloading">生成导出文件</el-button>
+            </span>
+        </el-dialog>
+    </div>
+</body>
+
+</html>

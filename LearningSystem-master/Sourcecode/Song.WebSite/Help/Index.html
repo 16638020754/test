@@ -1,0 +1,54 @@
+﻿<!doctype html>
+<html>
+
+<head>
+    <title>帮助中心</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="Images/help.ico" />
+    <link type="text/css" rel="stylesheet" href="../Utilities/Fonts/icon.css">
+    <link href="Styles/index.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/Utilities/Scripts/axios_min.js"></script>
+    <script type="text/javascript" src="/Utilities/Scripts/api.js"></script>
+    <script type="text/javascript" src="/Utilities/Scripts/vue.min.js"></script>
+</head>
+
+<body>
+    <div id="vapp">
+        <header>
+            <div icon="&#xa026">帮助中心</div>
+            <div>
+                <span icon="&#xa047" copyright="tel"> </span>
+                <a href="/" icon="&#xa020">首页</a>
+            </div>
+        </header>
+        <section>
+            <nav>
+                <template v-for="item in menus">
+                    <p v-if="item.type=='line'" class="line"></p>
+                    <template v-else>
+                        <a :href="item.url" v-if="item.type=='link'" :style="nodestyle(item)"
+                            :current="item.name==current.name" target="_blank">
+                            <icon v-html="'&#x'+item.icon.i" :style="iconstyle(item.icon)"></icon>
+                            <span v-html="item.name"></span>
+                            <hot v-if="item.hot"></hot>
+                        </a>
+                        <div v-else @click="menuclk(item)" :style="nodestyle(item)" :current="item.name==current.name">
+                            <icon v-html="'&#x'+item.icon.i" :style="iconstyle(item.icon)"></icon>
+                            <span v-html="item.name"></span>
+                            <hot v-if="item.hot"></hot>
+                        </div>
+                    </template>
+                </template>
+                <a class="copyright" copyright="website" target="_blank"><span copyright="company"></span></a>
+            </nav>
+            <aside>
+                <iframe name="content" id="content" frameborder="0" border="0" marginwidth="0" marginheight="0"
+                    :src="iframeurl"></iframe>
+            </aside>
+        </section>
+    </div>
+</body>
+<script type="text/javascript" src="Scripts/index.js"></script>
+
+</html>
